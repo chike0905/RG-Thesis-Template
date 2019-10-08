@@ -1,0 +1,278 @@
+% EPSF macros by Kazuhiro Kazama and modified by Hideki ISOZAKI
+%   based on Trevor J. Darrell's psfig.tex
+%
+% All software, documentation, and related files in this distribution of
+% psfig/tex are Copyright (c) 1987 Trevor J. Darrell
+%
+% Permission is granted for use and non-profit distribution of psfig/tex 
+% providing that this notice be clearly maintained, but the right to
+% distribute any portion of psfig/tex for profit or as part of any commercial
+% product is specifically reserved for the author.
+\endlinechar=-1
+
+\typeout{EPSF macro package for LaTeX. version 1.5 - Released May 11, 1992}
+\newcount\@arga
+\newcount\@argb
+\newcount\@argc
+\newcount\@ctmpa
+\newcount\@ctmpb
+\newcount\@ctmpc
+\newcount\@ctmpd
+\newcount\@ctmpe
+\newdimen\@darg
+\newdimen\@bblen
+\newif\ifepsfdraft
+\epsfdraftfalse
+
+\def\@setpsfile#1{
+		\def\@psfile{#1}
+                \bb@search
+}
+\def\@setpsheight#1{
+		\@darg=#1\relax
+   		\edef\@psheight{\number\@darg}
+}
+\def\@setpswidth#1{
+		\@darg=#1\relax
+   		\edef\@pswidth{\number\@darg}
+}
+\def\@setpsscale#1{
+		\def\@pshscale{#1}
+		\def\@psvscale{#1}
+}
+\def\@setpshscale#1{
+		\def\@pshscale{#1}
+}
+
+\def\@setpsvscale#1{
+		\def\@psvscale{#1}
+}
+
+
+
+%
+% Go through the options setting things up.
+%
+\def\parse@ps@parms#1{
+        \def\@bbw{0}\def\@bbh{0}
+	\def\@pshscale{1}\def\@psvscale{1}
+        \def\@psheight{0}\def\@pswidth{0}% in sp
+        \@for\@epsfopt:=#1\do
+           {\expandafter\@setparms\@epsfopt,}}
+
+\def\@setparms#1=#2,{\@nameuse{@setps#1}{#2}}
+
+%
+% Compute %%BoundingBox height and width
+%
+\newif\ifcontinue
+
+\catcode`\%=12\relax
+
+\newread\ps@stream
+\def\bb@search{\continuetrue
+        \typeout{analyzing \@psfile}
+	\openin\ps@stream=\@psfile
+	\catcode`\%=12\relax
+	\ifeof\ps@stream\errmessage{epsf: \@psfile\space not found}\fi
+	\loop
+		\read\ps@stream to \epsf@line
+                \expandafter\epsf@getbb\epsf@line%%BoundingBox:\end@getbb
+		\ifnum\@bbw=\z@\else \continuefalse\fi
+                \ifeof\ps@stream \continuefalse \fi
+	\ifcontinue \repeat
+        \closein\ps@stream
+	\catcode`\%=14
+}	
+
+\def\epsf@getbb #1%%BoundingBox:#2\end@getbb{
+   \def\epsf@tmp{#1}\def\epsf@atend{ (atend)}
+   \ifx\epsf@tmp\empty
+     \edef\epsf@tmp{#2}
+     \ifx\epsf@tmp\epsf@atend
+       \errmessage{%%BoundingBox: (atend)}
+     \else
+       \epsf@bbarg #2 0 0 0 0 0 %%BoundingBox\end@getbb
+     \fi
+   \fi}
+
+\def\epsf@bbarg #1 #2 #3 #4 #5%%BoundingBox#6\end@getbb{
+  \def\epsf@tmp{#1}
+  \ifx\epsf@tmp\empty
+    \@darg=#4bp \advance\@darg-#2bp \edef\@bbw{\number\@darg}
+    \@darg=#5bp \advance\@darg-#3bp \edef\@bbh{\number\@darg}
+  \else
+    \@darg=#3bp \advance\@darg-#1bp \edef\@bbw{\number\@darg}
+    \@darg=#4bp \advance\@darg-#2bp \edef\@bbh{\number\@darg}
+  \fi
+  {\@arga=\@bbw \divide\@arga by 186468\relax
+   \@argb=\@bbh \divide\@argb by 186468\relax
+   \message{original: \the\@arga mm x \the\@argb mm}}
+}
+
+\catcode`\%=14\relax
+
+
+% \in@hundreds performs #1 * (#2 / #3) correct to the hundreds,
+%	then leaves the result in @result
+%
+
+\def\in@hundreds#1#2#3{\@argb=#2 \@argc=#3
+		     \@ctmpa=\@argb	% @ctmpa is first digit #2/#3
+		     \divide\@ctmpa by \@argc
+		     \@ctmpb=\@ctmpa
+		     \multiply\@ctmpb by \@argc
+		     \advance\@argb by -\@ctmpb
+		     \multiply\@argb by 10
+		     \@ctmpb=\@argb	% @ctmpb is second digit of #2/#3
+		     \divide\@ctmpb by \@argc
+		     \@ctmpc=\@ctmpb
+		     \multiply\@ctmpc by \@argc
+		     \advance\@argb by -\@ctmpc
+		     \multiply\@argb by 10
+		     \@ctmpc=\@argb	% @ctmpc is the third digit
+		     \divide\@ctmpc by \@argc
+		     \@arga=#1\@ctmpe=0
+		     \@ctmpd=\@arga
+			\multiply\@ctmpd by \@ctmpa
+		 	\advance\@ctmpe by \@ctmpd
+		     \@ctmpd=\@arga
+			\divide\@ctmpd by 10
+			\multiply\@ctmpd by \@ctmpb
+			\advance\@ctmpe by \@ctmpd
+			%
+		     \@ctmpd=\@arga
+			\divide\@ctmpd by 100
+			\multiply\@ctmpd by \@ctmpc
+			\advance\@ctmpe by \@ctmpd
+			%
+		     \edef\@result{\number\@ctmpe}
+}
+
+\def\compute@wfromh{
+                \ifnum\@psheight>\z@
+		  \in@hundreds{\@psheight}{\@bbw}{\@bbh}
+                  \edef\@pswidth{\@result}
+                \else
+		  \in@hundreds{-\@psheight}{\@bbw}{\@bbh}
+                  \edef\@pswidth{\number-\@result}
+                \fi
+}
+\def\compute@hfromw{
+		% computing : height = width * (bbh / bbw)
+                \ifnum\@pswidth>\z@
+		  \in@hundreds{\@pswidth}{\@bbh}{\@bbw}
+                  \edef\@psheight{\@result}
+                \else
+                  \in@hundreds{-\@pswidth}{\@bbh}{\@bbw}
+                  \edef\@psheight{\number-\@result}
+                \fi
+}
+\def\compute@handw{
+	\ifnum\@psheight=\z@ 
+		\ifnum\@pswidth=\z@ 
+                        \@darg=\@bbh sp \@darg=\@psvscale\@darg
+		        \edef\@psheight{\number\@darg}
+                        \@darg=\@bbw sp \@darg=\@pshscale\@darg
+                        \edef\@pswidth{\number\@darg}
+                \else
+			\compute@hfromw
+		\fi
+	\else 
+		\ifnum\@pswidth=\z@ 
+			\compute@wfromh
+		\fi
+	\fi
+}
+{\catcode`\p=12\catcode`\t=12
+\gdef\remove@dim@frac#1.#2pt{#1}}
+
+%
+% \epsfile
+% usage : \epsfile{file=, height=, width=}
+% usage : \epsfile{file=, scale=}
+% usage : \epsfile{file=, vscale=, hscale=}
+%
+\def\epsfile{\@ifnextchar[{\@epsfile}{\@epsfile[]}}
+\def\@epsfile[#1]#2{{
+  \parse@ps@parms{#2}
+  \compute@handw
+  {\@arga=\@pswidth \divide\@arga by 186468\relax
+    \@argb=\@psheight \divide\@argb by 186468\relax
+    \message{becomes \the\@arga mm x \the\@argb mm}}
+  \@arga=\@psheight  \divide\@arga by 65782\relax
+  \edef\@psvsize{\number\@arga}
+  \@arga=\@pswidth   \divide\@arga by 65782\relax
+  \edef\@pshsize{\number\@arga}
+  \leavevmode
+  \ifnum\@pswidth>\z@ 
+    \hbox to \@pswidth sp\bgroup
+  \else
+    \hbox to -\@pswidth sp\bgroup
+    \hfill
+  \fi
+    \ifnum\@psheight>\z@
+      \vrule\@width\z@\@height\@psheight sp \@depth\z@
+      \raise\@psheight sp 
+    \else
+      \vrule\@width\z@\@height-\@psheight sp \@depth\z@
+    \fi
+    \hbox to\z@\bgroup
+    \ifnum\@psheight=\z@
+       \ifnum\@pswidth=\z@
+         \edef\epsf@tmpa{\@pshscale,\@psvscale}
+         \edef\epsf@tmp{1,1}
+         \ifx\epsf@tmpa\epsf@tmp
+           \special{epsfile=\@psfile \space}
+         \else
+           \special{epsfile=\@psfile \space
+              vscale=\@psvscale \space hscale=\@pshscale \space}
+         \fi
+       \else
+         \special{epsfile=\@psfile \space hsize=\@pshsize \space}
+       \fi
+    \else
+       \ifnum\@pswidth=\z@
+         \special{epsfile=\@psfile \space vsize=\@psvsize \space}
+       \else
+         \special{epsfile=\@psfile \space 
+           hsize=\@pshsize \space vsize=\@psvsize \space}
+       \fi
+    \fi
+    \egroup
+    \ifnum\@psheight>\z@
+      \vrule\@width\z@\@height\@psheight sp \@depth\z@
+    \else
+      \vrule\@width\z@\@height-\@psheight sp \@depth\z@
+      \raise-\@psheight sp 
+    \fi
+    \hbox to\z@{#1}\hfil
+  \egroup
+}}
+
+% You can put anything on the original picture.
+% \epsfat puts it on the correct position
+%             even if you change the picture size.
+
+\def\epsfat(#1,#2)#3{\@killglue{
+    \@darg=#1 \edef\epsf@atx{\number\@darg}
+    \ifnum\@pswidth>\z@
+      \in@hundreds{\epsf@atx}{\@pswidth}{\@bbw}
+      \edef\epsf@atx{\@result}
+    \else
+      \in@hundreds{\epsf@atx}{-\@pswidth}{\@bbw}
+      \edef\epsf@atx{\number-\@result}
+    \fi
+    \@darg=#2 \edef\epsf@aty{\number\@darg}
+    \ifnum\@psheight>\z@
+      \in@hundreds{\epsf@aty}{\@psheight}{\@bbh}
+      \edef\epsf@aty{\@result}
+    \else
+      \in@hundreds{\epsf@aty}{-\@psheight}{\@bbh}
+      \edef\epsf@aty{\number-\@result}
+    \fi
+    \smash{\raise\epsf@aty sp
+    \hbox to \z@{\kern\epsf@atx sp\relax#3\hss}}}\ignorespaces}
+
+\endlinechar=13\relax
+\endinput

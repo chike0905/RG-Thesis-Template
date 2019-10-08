@@ -1,0 +1,13 @@
+\newenvironment{codeline}{
+  \vspace{.4\baselineskip}
+  \noindent
+  \begin{alltt}
+    \renewcommand{\baselinestretch}{0.8}{\usefont{T1}{pcr}{m}{n}}
+    \fontsize{9pt}{9pt}\selectfont}{\addvspace{0\baselineskip}
+  \end{alltt}}
+\newenvironment{ncodeline}{
+  \vspace{.4\baselineskip} \noindent
+  \begin{alltt}
+    \renewcommand{\baselinestretch}{0.8}{\usefont{T1}{pcr}{m}{n}}
+  }
+  {\addvspace{0\baselineskip} \end{alltt}}

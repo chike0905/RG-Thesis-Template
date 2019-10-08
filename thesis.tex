@@ -1,0 +1,143 @@
+\documentclass[12pt]{jreport}
+\usepackage{comment}
+\usepackage{./sty/eclepsf}
+\usepackage{tascmac}
+\usepackage{tabularx}
+\usepackage{listliketab}
+\usepackage[longnamesfirst]{natbib}
+\usepackage[dvipdfmx]{graphics}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage[dvipdfmx]{color}
+\usepackage{subfigure}
+\usepackage{alltt}
+\usepackage{here}
+\usepackage{afterpage}
+\usepackage{./sty/ncodeline}
+%\usepackage[dvipdfmx, colorlinks, breaklinks,%
+\usepackage[dvipdfmx, breaklinks,%
+bookmarks=true, bookmarksnumbered=true,%
+bookmarkstype=toc, bookmarksopen=true,bookmarksopenlevel=3,%
+pdftitle={RG},%
+]{hyperref}
+\usepackage{bookmark}
+
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+
+\usepackage{fancyhdr}
+
+\usepackage{./sty/doxygenorig}
+
+\usepackage{indentfirst}
+\usepackage{url}
+\usepackage{listings,./sty/jlisting}
+
+\def\lstlistingname{プログラム}
+
+\lstset{%
+ language={C++},
+ %backgroundcolor={\color[gray]{.85}},%
+ basicstyle={\small\ttfamily},%
+ identifierstyle={\small},%
+ commentstyle={\small\itshape},%
+ keywordstyle={\small\bfseries},%
+ ndkeywordstyle={\small\ttfamily},%
+ stringstyle={\small\ttfamily},
+ frame={tb},
+ framesep=1zw,
+ breaklines=true,
+ numbers=left,%
+ xrightmargin=0zw,%
+ xleftmargin=1.5zw,%
+ numberstyle={\scriptsize},%
+ stepnumber=1,
+ numbersep=1zw,%
+ lineskip=-0.5ex%
+}
+
+\usepackage{amssymb}
+%\usepackage{supertabular,multirow}
+
+\usepackage{array}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+% A4  size: 297mm*210mm %1pt = 0.35mm
+\setlength{\topmargin}{-3.4mm} % 10pt 25.4mm - 3.4mm = 22mm
+\setlength{\oddsidemargin}{-0.4mm} % 25.4mm - 0.4mm = 25mm
+\setlength{\evensidemargin}{-0.4mm} % 25.4mm - 0.4mm = 25mm
+\setlength{\textheight}{231mm} % 660pt % original is 225.75mm 645pt
+\setlength{\textwidth}{160mm} % 457pt
+
+\renewcommand{\topfraction}{.99}
+\renewcommand{\textfraction}{.0}
+\renewcommand{\floatpagefraction}{.99}
+\renewcommand{\bibname}{参考文献}
+
+
+\pagestyle{fancy}
+\lhead[]{}
+
+\makeatletter
+\def\chaptermark#1{\markboth {\ifnum \c@secnumdepth>\m@ne
+\@chapapp\ \thechapter \@chappos\ \fi #1}{}}
+\makeatother
+
+% タイトル
+\def\title{RGにおける卒論\LaTeX テンプレート2019}
+% 英語タイトル
+\def\etitle{\LaTeX Template for RG 2019}
+% 著者(日本語)
+\def\author{阿部涼介}
+% 著者(英語)
+\def\eauthor{Ryosuke Abe}
+% 学部・研究科
+\def\dept{慶應義塾大学大学院 政策・メディア研究科}
+% 学部・研究科(英語)
+\def\edept{Keio University Graduate School of Media and Governance}
+
+\begin{document}
+
+\pagenumbering{roman}
+\input{src/titlepage}
+\thispagestyle{empty}
+
+
+\input{src/abstract_japanese}
+\thispagestyle{plain}
+\clearpage
+
+\input{src/abstract_english}
+\thispagestyle{plain}
+\clearpage
+
+\tableofcontents\thispagestyle{plain} %目次
+\clearpage
+\listoffigures\thispagestyle{plain} %図目次
+\clearpage
+\listoftables\thispagestyle{plain} %表目次
+\clearpage
+
+\pagenumbering{arabic}
+\input{src/1_introduction}
+\input{src/2_background}
+\input{src/3_issue}
+\input{src/4_proposed}
+\input{src/5_implementation}
+\input{src/6_evaluation}
+\input{src/7_conclusion}
+%\input{src/appendix}
+\input{src/acknowledgement}
+
+\renewcommand{\thechapter}{\Alph{chapter}}
+\setcounter{chapter}{0}
+\vspace{-5mm}
+
+
+\input{bib/biblio}\thispagestyle{plain}%bibtex
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: japanese-latex
+%%% TeX-master: t
+%%% End:

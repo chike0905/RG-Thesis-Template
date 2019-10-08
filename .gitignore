@@ -1,0 +1,14 @@
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.lof
+*.log
+*.lot
+*.out.ps
+*.toc
+*.xbb
+comments
+resume
+etc
+.DS_Store

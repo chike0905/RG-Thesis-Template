@@ -1,0 +1,7 @@
+% 14 May, 1994
+\let\thepageoriginal=\thepage
+\def\thepage{\hfill {\thepageoriginal/\l@stp@genumber}}
+\def\l@stp@genumber{\@ifundefined{r@l@stp@genumber}{(last page)}%
+  {\expandafter\@car\r@l@stp@genumber\@nil}}
+\def\lastpagenumber{%
+ \def\@currentlabel{\arabic{page}}\label{l@stp@genumber}}

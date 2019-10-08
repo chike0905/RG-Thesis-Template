@@ -1,0 +1,95 @@
+%	re'sume' style file
+%
+%					by K-suke Uehara
+%
+%	$Id: misc.sty,v 1.1.1.1 2006/05/22 02:55:29 tomine Exp $
+%		
+%	\centeruid	名前、所属等をセンタリングする。
+%	\oneside	1 page のレジュメを作る時等、真中に印刷する時用。
+%
+%
+%
+% 使い方の例:
+%
+%   \documentstyle[a4j,12pt,twoside,twocolumn,epsf,re'sume']{jarticle}
+%   \classification {ミーティング資料}
+%   \title {オペレーティングシステムにおける\\通信機能の抽象化に関する研究}
+%   \organ {慶應義塾大学 環境情報学部}
+%   \author {植原 啓介}			+---------------------------+
+%   \date {1994年 9月 26日}		|class                 date |
+%   \centeruid				|	    title           |
+%   \oneside				|       belongto auth       |
+%   					|                           |
+%   \abstract{				|            概要           |
+%   ここにアブストラクトを書きます。	|   ---------------------   |
+%   ..........				|                           |
+%   }					| ------------ ------------ |
+%   					| ------------ ------------ |
+%   \begin{document}			| ------------ ------------ |
+%   \maketitle				| ------------ ------------ |
+%   					| ------------ ------------ |
+%   \section{始めに}			| ------------ ------------ |
+%   ここに本文を書きます。		| ------------ ------------ |
+%   ..........				| ------------ ------------ |
+%   					+---------------------------+
+%   \end{document}
+
+\typeout{Copyright: Keisuke UEHARA (kei@wide.ad.jp)}
+
+\renewenvironment{itemize}{\begin{list}{$\bullet$}
+ {\setlength\labelwidth{.5em} \setlength\leftmargin{1.0em}
+ \setlength{\topsep}		{0.3em plus 0.1em minus 0.1em}
+ \setlength{\parskip}		{0em}
+ \setlength{\partopsep}		{0em}
+ \setlength{\itemsep}		{0.2em plus 0.1em minus 0.1em}
+ \setlength{\parsep}		{0em}
+ \def\makelabel##1{##1\hfill}}}{\end{list}}
+
+\renewenvironment{quote}{\begin{list}{$\bullet$}
+ {\setlength\labelwidth{.5em} \setlength\leftmargin{1.0em}
+ \setlength{\topsep}		{0.3em plus 0.1em minus 0.1em}
+ \setlength{\parskip}		{0em}
+ \setlength{\partopsep}		{0em}
+ \setlength{\itemsep}		{0.2em plus 0.1em minus 0.1em}
+ \setlength{\parsep}		{0em}
+ \rightmargin\leftmargin}
+ \item[]}{\end{list}}
+
+\def\descriptionlabel#1{\hspace\labelsep \bf #1}
+\def\description{\list{}{\setlength\leftmargin{0.7em}
+ \labelwidth\z@ \itemindent-\leftmargin
+ \setlength{\topsep}		{0.3em plus 0.1em minus 0.1em}
+ \setlength{\parskip}		{0em}
+ \setlength{\partopsep}		{0em}
+ \setlength{\itemsep}		{0.2em plus 0.1em minus 0.1em}
+ \setlength{\parsep}		{0em}
+ \let\makelabel\descriptionlabel}}
+
+\long\def\@makecaption#1#2{
+ \vskip 0.1em
+ \setbox\@tempboxa\hbox{#1: #2}
+ \ifdim \wd\@tempboxa >\hsize \unhbox\@tempboxa\par \else \hbox
+to\hsize{\hfil\box\@tempboxa\hfil} 
+ \fi}
+
+\def\thebibliography#1{\section*{{\large \bf 参考文献}\markboth
+ {参 考 文 献}{参 考 文 献}}\list
+ {[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+ \advance\leftmargin\labelsep\small
+ \usecounter{enumi}}
+ \def\newblock{\hskip .11em minus .07em}
+ \sloppy
+ \sfcode`\.=1000\relax}
+\let\endthebibliography=\endlist
+
+\def\section{\@startsection {section}{1}{\z@}{0.7em plus 0.5em minus 
+ .5em}{0.4em plus .1em}{\Large\bf}}
+\def\subsection{\@startsection{subsection}{2}{\z@}{0.6em plus 0.2em minus 
+ .5em}{0.3em plus .1em}{\large\bf}}
+\def\subsubsection{\@startsection{subsubsection}{3}{\z@}{0.5em plus
+ 0.2em minus .4em}{0.2em plus .1em}{\normalsize\bf}}
+\def\paragraph{\@startsection
+ {paragraph}{4}{\z@}{0.5em plus 0.4em minus .2em}{-1em}{\normalsize\bf}}
+\def\subparagraph{\@startsection
+ {subparagraph}{4}{\parindent}{0.5em plus 0.2em minus 
+ .4em}{-1em}{\normalsize\bf}}
